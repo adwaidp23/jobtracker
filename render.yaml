@@ -38,6 +38,7 @@ services:
   - type: keyvalue
     name: jobtracker-redis
     plan: free
+    ipAllowList: []
 
 databases:
   - name: jobtracker-db
