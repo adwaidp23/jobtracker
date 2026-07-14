@@ -2,6 +2,7 @@ services:
   - type: web
     name: jobtracker-api
     env: python
+    plan: free
     buildCommand: "pip install -r backend/requirements.txt"
     startCommand: "cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
     envVars:
@@ -22,6 +23,7 @@ services:
   - type: worker
     name: jobtracker-celery
     env: python
+    plan: free
     buildCommand: "pip install -r backend/requirements.txt"
     startCommand: "cd backend && celery -A app.worker.celery_app worker --loglevel=info"
     envVars:
@@ -44,3 +46,4 @@ databases:
   - name: jobtracker-db
     databaseName: jobtracker
     user: jobtracker
+    plan: free
