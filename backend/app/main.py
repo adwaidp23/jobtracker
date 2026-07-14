@@ -12,7 +12,11 @@ app = FastAPI(
 # Set all CORS enabled origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # In production, restrict to frontend URL
+    allow_origins=[
+        "http://localhost:5173",
+        "https://incandescent-druid-a7b4b6.netlify.app",
+        "https://jobtracker-api-qkmd.onrender.com"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
