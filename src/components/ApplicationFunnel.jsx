@@ -1,4 +1,3 @@
-import React from 'react';
 import { ResponsiveContainer, FunnelChart, Funnel, LabelList, Tooltip } from 'recharts';
 import './ApplicationFunnel.css';
 

@@ -34,7 +34,7 @@ class InterviewRound(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
-    application = relationship("Application")
+    application = relationship("Application", back_populates="interview_rounds")
 
 class Assessment(Base):
     __tablename__ = "assessments"
@@ -55,4 +55,4 @@ class Assessment(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
-    application = relationship("Application")
+    application = relationship("Application", back_populates="assessments")

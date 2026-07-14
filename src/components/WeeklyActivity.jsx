@@ -1,4 +1,3 @@
-import React from 'react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, Tooltip } from 'recharts';
 
 export default function WeeklyActivity({ data }) {

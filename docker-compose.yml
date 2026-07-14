@@ -32,6 +32,7 @@ services:
       - DATABASE_URL=postgresql://postgres:password@db:5432/careerflow
       - REDIS_URL=redis://redis:6379/0
       - SECRET_KEY=supersecretkey_please_change_in_production
+      - DEV_MODE=true
       - ALGORITHM=HS256
       - ACCESS_TOKEN_EXPIRE_MINUTES=30
     depends_on:

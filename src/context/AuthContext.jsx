@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import apiClient from '../api/client';
 
 const AuthContext = createContext();
@@ -6,22 +6,34 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [sessionExpired, setSessionExpired] = useState(false);
+
+  const logout = useCallback((expired = false) => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refresh_token');
+    setUser(null);
+    if (expired) setSessionExpired(true);
+  }, []);
 
   useEffect(() => {
-    // Check if user is logged in
+    // Validate the stored access token against the real /auth/me endpoint
     const checkUser = async () => {
       const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          // We could add an endpoint like /users/me, but for now just assume token is valid
-          // if we had a user object in localStorage, we could parse it
-          setUser({ loggedIn: true });
-        } catch (error) {
-          console.error("Token invalid", error);
-          localStorage.removeItem('token');
-        }
+      if (!token) {
+        setLoading(false);
+        return;
       }
-      setLoading(false);
+      try {
+        const res = await apiClient.get('/auth/me');
+        setUser(res.data);
+      } catch (error) {
+        // Token invalid or expired — will be handled by the axios interceptor
+        console.warn('Stored token invalid, clearing session.');
+        localStorage.removeItem('token');
+        localStorage.removeItem('refresh_token');
+      } finally {
+        setLoading(false);
+      }
     };
     checkUser();
   }, []);
@@ -32,12 +44,12 @@ export const AuthProvider = ({ children }) => {
     formData.append('password', password);
 
     const response = await apiClient.post('/auth/login', formData, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     });
 
     localStorage.setItem('token', response.data.access_token);
+    localStorage.setItem('refresh_token', response.data.refresh_token);
+    setSessionExpired(false);
     setUser({ loggedIn: true });
   };
 
@@ -46,13 +58,8 @@ export const AuthProvider = ({ children }) => {
     return response.data;
   };
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    setUser(null);
-  };
-
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, register, logout, loading, sessionExpired, setSessionExpired }}>
       {!loading && children}
     </AuthContext.Provider>
   );

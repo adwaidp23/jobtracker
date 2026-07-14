@@ -1,11 +1,13 @@
-import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LayoutDashboard, Briefcase, LogOut } from 'lucide-react';
+import { LayoutDashboard, Briefcase, LogOut, Users, FileText } from 'lucide-react';
 import './Sidebar.css';
 
 const navItems = [
-  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/' }
+  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/' },
+  { id: 'applications', label: 'Applications', icon: Briefcase, path: '/applications' },
+  { id: 'crm', label: 'CRM', icon: Users, path: '/crm' },
+  { id: 'documents', label: 'Documents', icon: FileText, path: '/documents' },
 ];
 
 export default function Sidebar() {
@@ -27,7 +29,7 @@ export default function Sidebar() {
             <li key={item.id}>
               <Link 
                 to={item.path} 
-                className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}
+                className={`nav-item ${location.pathname.startsWith(item.path) && item.path !== '/' || (location.pathname === '/' && item.path === '/') ? 'active' : ''}`}
               >
                 <item.icon size={20} className="nav-icon" />
                 <span>{item.label}</span>

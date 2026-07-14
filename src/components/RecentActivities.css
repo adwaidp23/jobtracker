@@ -4,6 +4,24 @@
   gap: 0;
 }
 
+.recent-loading,
+.recent-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px 16px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  text-align: center;
+}
+
+.recent-empty-icon {
+  color: var(--text-secondary);
+  opacity: 0.5;
+}
+
 .recent-item {
   display: flex;
   gap: 16px;
@@ -23,6 +41,7 @@
   align-items: center;
   justify-content: center;
   z-index: 1;
+  flex-shrink: 0;
 }
 
 .recent-line {
@@ -44,7 +63,23 @@
   margin-bottom: 4px;
 }
 
+.recent-status {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.recent-status-chip {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
 .recent-time {
   font-size: 11px;
   color: var(--text-secondary);
 }
+

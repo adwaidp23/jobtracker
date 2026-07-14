@@ -30,6 +30,8 @@ class Application(Base):
 
     opportunity = relationship("Opportunity", back_populates="application")
     history = relationship("ApplicationHistory", back_populates="application", cascade="all, delete-orphan", order_by="desc(ApplicationHistory.timestamp)")
+    interview_rounds = relationship("InterviewRound", back_populates="application", cascade="all, delete-orphan", order_by="InterviewRound.created_at")
+    assessments = relationship("Assessment", back_populates="application", cascade="all, delete-orphan", order_by="Assessment.created_at")
 
 class ApplicationHistory(Base):
     __tablename__ = "application_history"

@@ -1,0 +1,160 @@
+.detail-page {
+  padding: 0;
+}
+
+.detail-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+
+.detail-back-btn:hover { color: var(--primary-blue); }
+
+.detail-hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.detail-hero-info h2 {
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+
+.detail-hero-info .role {
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+
+.detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.detail-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.detail-meta-item a {
+  color: var(--primary-blue);
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+.section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* History timeline */
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.history-item {
+  display: flex;
+  gap: 16px;
+  padding-bottom: 20px;
+}
+
+.history-dot-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.history-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--primary-blue);
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.history-line {
+  width: 2px;
+  flex-grow: 1;
+  background: var(--border-color);
+  margin-top: 4px;
+  min-height: 20px;
+}
+
+.history-content p {
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.history-content small {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* Interview rounds & assessments */
+.round-card {
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.round-card h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.round-card .round-meta {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.round-card .round-feedback {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-primary);
+  font-style: italic;
+  background: var(--bg-primary);
+  padding: 8px 10px;
+  border-radius: 6px;
+}
+
+.empty-section {
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 20px;
+}
+
+.detail-jd {
+  font-size: 13px;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  line-height: 1.6;
+  max-height: 200px;
+  overflow-y: auto;
+}
