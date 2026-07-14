@@ -1,16 +1,60 @@
-# React + Vite
+# CareerFlow (JobTracker)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack application to track job applications, interviews, and career progress.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Frontend
+- **Framework**: React with Vite
+- **Styling**: Vanilla CSS / Custom Components
+- **Hosting**: Netlify
+- **Routing**: React Router
 
-## React Compiler
+### Backend
+- **Framework**: FastAPI (Python)
+- **Database**: PostgreSQL (managed via SQLAlchemy and Alembic)
+- **Background Tasks**: Celery with Redis broker
+- **Hosting**: Render
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Project Structure
 
-## Expanding the ESLint configuration
+- `/src`: Frontend React source code.
+- `/public`: Static frontend assets and Netlify configurations (`_redirects`).
+- `/backend`: FastAPI backend source code, Alembic database migrations, and Celery worker configurations.
+- `docker-compose.yml`: Local development setup for PostgreSQL and Redis.
+- `render.yaml`: Render Infrastructure-as-Code for deploying the backend services.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Local Development
+
+1. **Start the Databases**
+   Make sure Docker is running, then spin up the local PostgreSQL and Redis instances:
+   ```bash
+   docker-compose up -d db redis
+   ```
+
+2. **Start the Backend**
+   Open a terminal, navigate to the `backend` folder, install dependencies, and run the FastAPI server:
+   ```bash
+   cd backend
+   python -m venv .venv
+   .venv\Scripts\activate  # On Windows
+   pip install -r requirements.txt
+   
+   # Run database migrations
+   alembic upgrade head
+   
+   # Start the server
+   python -m uvicorn app.main:app --reload
+   ```
+
+3. **Start the Frontend**
+   Open a new terminal at the root of the project, install dependencies, and run the Vite dev server:
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+## Deployment
+
+- **Frontend**: Automatically deployed to Netlify on every push to the `main` branch.
+- **Backend**: Automatically deployed to Render on every push to the `main` branch via the configuration in `render.yaml`. The Render deployment consists of an API Web Service, a Celery Worker, a Redis instance, and a PostgreSQL database.
