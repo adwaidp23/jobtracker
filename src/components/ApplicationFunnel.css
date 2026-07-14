@@ -1,0 +1,44 @@
+.funnel-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.funnel-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.funnel-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.funnel-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.funnel-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.funnel-bar-wrapper {
+  width: 100%;
+  height: 24px;
+  background-color: var(--bg-primary);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.funnel-bar {
+  height: 100%;
+  background-color: var(--primary-blue);
+  border-radius: 12px;
+  transition: width 1s ease-out;
+}
