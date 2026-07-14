@@ -35,11 +35,11 @@ services:
           name: jobtracker-redis
           property: connectionString
 
+  - type: keyvalue
+    name: jobtracker-redis
+    plan: free
+
 databases:
   - name: jobtracker-db
     databaseName: jobtracker
     user: jobtracker
-
-  - type: keyvalue
-    name: jobtracker-redis
-    plan: free
