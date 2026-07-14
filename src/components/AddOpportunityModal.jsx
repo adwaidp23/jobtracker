@@ -7,7 +7,9 @@ export default function AddOpportunityModal({ isOpen, onClose, onSuccess }) {
   const [formData, setFormData] = useState({
     company_name: '',
     role_name: '',
+    job_type: 'Job',
     source_platform: 'LinkedIn',
+    other_platform: '',
     source_url: '',
     status: 'Saved'
   });
@@ -27,11 +29,11 @@ export default function AddOpportunityModal({ isOpen, onClose, onSuccess }) {
     setError('');
 
     try {
-      // 1. Create Opportunity
       const oppRes = await apiClient.post('/opportunities/', {
         company_name: formData.company_name,
         role_name: formData.role_name,
-        source_platform: formData.source_platform,
+        job_type: formData.job_type,
+        source_platform: formData.source_platform === 'Other' ? formData.other_platform : formData.source_platform,
         source_url: formData.source_url
       });
 
@@ -106,18 +108,39 @@ export default function AddOpportunityModal({ isOpen, onClose, onSuccess }) {
                 <option value="Referral">Referral</option>
                 <option value="Other">Other</option>
               </select>
+              {formData.source_platform === 'Other' && (
+                <input 
+                  type="text" 
+                  name="other_platform"
+                  value={formData.other_platform}
+                  onChange={handleChange}
+                  placeholder="e.g. Wellfound"
+                  required
+                  style={{ marginTop: '0.5rem' }}
+                />
+              )}
             </div>
           </div>
 
-          <div className="form-group">
-            <label>Job Posting URL</label>
-            <input 
-              type="url" 
-              name="source_url"
-              value={formData.source_url} 
-              onChange={handleChange} 
-              placeholder="https://..."
-            />
+          <div className="form-row">
+            <div className="form-group half-width">
+              <label>Job Type</label>
+              <select name="job_type" value={formData.job_type} onChange={handleChange}>
+                <option value="Job">Job</option>
+                <option value="Internship">Internship</option>
+                <option value="Contract">Contract</option>
+              </select>
+            </div>
+            <div className="form-group half-width">
+              <label>Job Posting URL</label>
+              <input 
+                type="url" 
+                name="source_url"
+                value={formData.source_url} 
+                onChange={handleChange} 
+                placeholder="https://..."
+              />
+            </div>
           </div>
 
           <div className="modal-footer">

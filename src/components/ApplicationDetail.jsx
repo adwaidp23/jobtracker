@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, MapPin, DollarSign, ExternalLink, Calendar, Briefcase } from 'lucide-react';
 import Sidebar from './Sidebar';
 import Header from './Header';
+import AddInterviewModal from './AddInterviewModal';
+import AddAssessmentModal from './AddAssessmentModal';
 import apiClient from '../api/client';
 import '../App.css';
 import './Applications.css';
@@ -40,19 +42,22 @@ export default function ApplicationDetail() {
   const [app, setApp] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showInterviewModal, setShowInterviewModal] = useState(false);
+  const [showAssessmentModal, setShowAssessmentModal] = useState(false);
+
+  const fetchDetail = async () => {
+    try {
+      const res = await apiClient.get(`/applications/${id}`);
+      setApp(res.data);
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.status === 404 ? 'Application not found.' : 'Failed to load application.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchDetail = async () => {
-      try {
-        const res = await apiClient.get(`/applications/${id}`);
-        setApp(res.data);
-      } catch (err) {
-        console.error(err);
-        setError(err.response?.status === 404 ? 'Application not found.' : 'Failed to load application.');
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchDetail();
   }, [id]);
 
@@ -123,7 +128,10 @@ export default function ApplicationDetail() {
               <div>
                 {/* Interview Rounds */}
                 <div className="card" style={{ marginBottom: 24 }}>
-                  <h3 className="section-title">Interview Rounds</h3>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, borderBottom: '1px solid var(--border-color)', paddingBottom: 10 }}>
+                    <h3 className="section-title" style={{ borderBottom: 'none', paddingBottom: 0, marginBottom: 0 }}>Interview Rounds</h3>
+                    <button className="btn-tiny" onClick={() => setShowInterviewModal(true)}>+ Add</button>
+                  </div>
                   {app.interview_rounds?.length > 0 ? app.interview_rounds.map(round => (
                     <div key={round.id} className="round-card">
                       <h4>{round.round_name}</h4>
@@ -146,7 +154,10 @@ export default function ApplicationDetail() {
 
                 {/* Assessments */}
                 <div className="card">
-                  <h3 className="section-title">Assessments</h3>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, borderBottom: '1px solid var(--border-color)', paddingBottom: 10 }}>
+                    <h3 className="section-title" style={{ borderBottom: 'none', paddingBottom: 0, marginBottom: 0 }}>Assessments</h3>
+                    <button className="btn-tiny" onClick={() => setShowAssessmentModal(true)}>+ Add</button>
+                  </div>
                   {app.assessments?.length > 0 ? app.assessments.map(assessment => (
                     <div key={assessment.id} className="round-card">
                       <h4>{assessment.assessment_type}</h4>
@@ -197,6 +208,19 @@ export default function ApplicationDetail() {
           </>
         )}
       </main>
+
+      <AddInterviewModal 
+        isOpen={showInterviewModal} 
+        onClose={() => setShowInterviewModal(false)} 
+        onSuccess={() => { setShowInterviewModal(false); fetchDetail(); }} 
+        applicationId={id} 
+      />
+      <AddAssessmentModal 
+        isOpen={showAssessmentModal} 
+        onClose={() => setShowAssessmentModal(false)} 
+        onSuccess={() => { setShowAssessmentModal(false); fetchDetail(); }} 
+        applicationId={id} 
+      />
     </div>
   );
 }

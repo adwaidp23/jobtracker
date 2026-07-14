@@ -9,7 +9,7 @@ import './CRM.css';
 
 function AddContactModal({ isOpen, onClose, onSuccess }) {
   const [form, setForm] = useState({
-    full_name: '', company: '', role: '', email: '', phone: '', linkedin_url: '', notes: '',
+    name: '', company: '', designation: '', email: '', phone: '', linkedin_url: '', notes: '',
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -42,10 +42,10 @@ function AddContactModal({ isOpen, onClose, onSuccess }) {
         {error && <div className="page-error" style={{ marginBottom: 12 }}>{error}</div>}
         <form onSubmit={handleSubmit}>
           {[
-            { name: 'full_name', label: 'Full Name', required: true },
+            { name: 'name', label: 'Full Name', required: true },
             { name: 'company', label: 'Company' },
-            { name: 'role', label: 'Role / Title' },
-            { name: 'email', label: 'Email', type: 'email' },
+            { name: 'designation', label: 'Role / Title' },
+            { name: 'email', label: 'Email / Referral Email', type: 'email' },
             { name: 'phone', label: 'Phone' },
             { name: 'linkedin_url', label: 'LinkedIn URL' },
           ].map(field => (
@@ -161,11 +161,11 @@ export default function CRM() {
                 <div key={contact.id} className="contact-card">
                   <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', flex: 1 }}>
                     <div className="contact-avatar">
-                      {(contact.full_name?.[0] ?? '?').toUpperCase()}
+                      {(contact.name?.[0] ?? '?').toUpperCase()}
                     </div>
                     <div className="contact-info">
-                      <h4>{contact.full_name}</h4>
-                      {contact.role && <p>{contact.role}{contact.company ? ` @ ${contact.company}` : ''}</p>}
+                      <h4>{contact.name}</h4>
+                      {contact.designation && <p>{contact.designation}{contact.company ? ` @ ${contact.company}` : ''}</p>}
                       {contact.email && <p><a href={`mailto:${contact.email}`}>{contact.email}</a></p>}
                       {contact.linkedin_url && (
                         <p><a href={contact.linkedin_url} target="_blank" rel="noreferrer">LinkedIn</a></p>
