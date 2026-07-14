@@ -4,7 +4,7 @@ services:
     env: python
     plan: free
     buildCommand: "pip install -r backend/requirements.txt"
-    startCommand: "cd backend && (celery -A app.worker.celery_app worker -B --loglevel=info & uvicorn app.main:app --host 0.0.0.0 --port $PORT)"
+    startCommand: "cd backend && alembic upgrade head && (celery -A app.worker.celery_app worker -B --loglevel=info & uvicorn app.main:app --host 0.0.0.0 --port $PORT)"
     envVars:
       - key: PYTHON_VERSION
         value: "3.11.0"
