@@ -1,0 +1,45 @@
+services:
+  - type: web
+    name: jobtracker-api
+    env: python
+    buildCommand: "pip install -r backend/requirements.txt"
+    startCommand: "cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: jobtracker-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: jobtracker-redis
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 11520
+
+  - type: worker
+    name: jobtracker-celery
+    env: python
+    buildCommand: "pip install -r backend/requirements.txt"
+    startCommand: "cd backend && celery -A app.worker.celery_app worker --loglevel=info"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: jobtracker-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: jobtracker-redis
+          property: connectionString
+
+databases:
+  - name: jobtracker-db
+    databaseName: jobtracker
+    user: jobtracker
+
+  - type: redis
+    name: jobtracker-redis
+    plan: free
