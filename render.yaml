@@ -4,8 +4,10 @@ services:
     env: python
     plan: free
     buildCommand: "pip install -r backend/requirements.txt"
-    startCommand: "cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    startCommand: "cd backend && (celery -A app.worker.celery_app worker -B --loglevel=info & uvicorn app.main:app --host 0.0.0.0 --port $PORT)"
     envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.0"
       - key: DATABASE_URL
         fromDatabase:
           name: jobtracker-db
@@ -19,23 +21,6 @@ services:
         generateValue: true
       - key: ACCESS_TOKEN_EXPIRE_MINUTES
         value: 11520
-
-  - type: worker
-    name: jobtracker-celery
-    env: python
-    plan: free
-    buildCommand: "pip install -r backend/requirements.txt"
-    startCommand: "cd backend && celery -A app.worker.celery_app worker --loglevel=info"
-    envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: jobtracker-db
-          property: connectionString
-      - key: REDIS_URL
-        fromService:
-          type: keyvalue
-          name: jobtracker-redis
-          property: connectionString
 
   - type: keyvalue
     name: jobtracker-redis
