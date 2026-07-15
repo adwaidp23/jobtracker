@@ -1,104 +1,21 @@
 import { useState, useEffect } from 'react';
-import { Plus, X, Trash2, Users } from 'lucide-react';
 import Sidebar from './Sidebar';
 import Header from './Header';
+import AddContactModal from './AddContactModal';
 import apiClient from '../api/client';
+import Loader from './Loader';
 import '../App.css';
-import './Applications.css';
 import './CRM.css';
-
-function AddContactModal({ isOpen, onClose, onSuccess }) {
-  const [form, setForm] = useState({
-    name: '', company: '', designation: '', email: '', phone: '', linkedin_url: '', notes: '',
-  });
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState('');
-
-  if (!isOpen) return null;
-
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSaving(true);
-    setError('');
-    try {
-      await apiClient.post('/crm/contacts/', form);
-      onSuccess();
-    } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to add contact.');
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={e => e.stopPropagation()}>
-        <div className="modal-header">
-          <h2>Add Contact</h2>
-          <button onClick={onClose}><X size={20} /></button>
-        </div>
-        {error && <div className="page-error" style={{ marginBottom: 12 }}>{error}</div>}
-        <form onSubmit={handleSubmit}>
-          {[
-            { name: 'name', label: 'Full Name', required: true },
-            { name: 'company', label: 'Company' },
-            { name: 'designation', label: 'Role / Title' },
-            { name: 'email', label: 'Email / Referral Email', type: 'email' },
-            { name: 'phone', label: 'Phone' },
-            { name: 'linkedin_url', label: 'LinkedIn URL' },
-          ].map(field => (
-            <div key={field.name} style={{ marginBottom: 14 }}>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>
-                {field.label}{field.required && ' *'}
-              </label>
-              <input
-                name={field.name}
-                type={field.type || 'text'}
-                value={form[field.name]}
-                onChange={handleChange}
-                required={field.required}
-                style={{ width: '100%', padding: '9px 12px', borderRadius: 8, border: '1px solid var(--border-color)', fontSize: 14 }}
-              />
-            </div>
-          ))}
-          <div style={{ marginBottom: 14 }}>
-            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>Notes</label>
-            <textarea
-              name="notes"
-              value={form.notes}
-              onChange={handleChange}
-              rows={3}
-              style={{ width: '100%', padding: '9px 12px', borderRadius: 8, border: '1px solid var(--border-color)', fontSize: 14, resize: 'vertical' }}
-            />
-          </div>
-          <div className="modal-footer">
-            <button type="button" className="btn-secondary" onClick={onClose}>Cancel</button>
-            <button type="submit" className="btn-primary" disabled={saving}>
-              {saving ? 'Saving…' : 'Add Contact'}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
 
 export default function CRM() {
   const [contacts, setContacts] = useState([]);
-  const [referrals, setReferrals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
 
   const fetchData = async () => {
     try {
-      const [contactsRes, referralsRes] = await Promise.all([
-        apiClient.get('/crm/contacts/'),
-        apiClient.get('/crm/referrals/'),
-      ]);
+      const contactsRes = await apiClient.get('/crm/contacts/');
       setContacts(contactsRes.data);
-      setReferrals(referralsRes.data);
     } catch (err) {
       console.error(err);
     } finally {
@@ -108,105 +25,146 @@ export default function CRM() {
 
   useEffect(() => { fetchData(); }, []);
 
-  const handleDeleteContact = async (contactId) => {
-    if (!window.confirm('Delete this contact?')) return;
-    try {
-      await apiClient.delete(`/crm/contacts/${contactId}`);
-      setContacts(prev => prev.filter(c => c.id !== contactId));
-    } catch (err) {
-      console.error(err);
-      alert('Failed to delete contact.');
-    }
-  };
+  if (loading) {
+    return <Loader message="Loading Network..." />;
+  }
 
-  const handleDeleteReferral = async (referralId) => {
-    if (!window.confirm('Delete this referral?')) return;
-    try {
-      await apiClient.delete(`/crm/referrals/${referralId}`);
-      setReferrals(prev => prev.filter(r => r.id !== referralId));
-    } catch (err) {
-      console.error(err);
-      alert('Failed to delete referral.');
+  // Fallback data for mockup if empty
+  const displayData = contacts.length > 0 ? contacts : [
+    {
+      id: 1, name: 'Sarah Jenkins', designation: 'Tech Recruiter', company: 'Google', 
+      tags: [{label: 'Recruiter', type: 'default'}, {label: 'In Review', type: 'info'}],
+      lastContacted: '2 days ago', strength: 4, actionText: 'Log Interaction'
+    },
+    {
+      id: 2, name: 'Marcus Chen', designation: 'Senior PM', company: 'Stripe',
+      tags: [{label: 'Referral', type: 'info'}, {label: 'Follow-up Needed', type: 'warning'}],
+      lastContacted: '14 days ago', strength: 3, actionText: 'Send Message'
+    },
+    {
+      id: 3, name: 'Elena Rodriguez', designation: 'Design Lead', company: 'Meta',
+      tags: [{label: 'Peer', type: 'default'}, {label: 'Mentor', type: 'info'}],
+      lastContacted: '5 days ago', strength: 5, actionText: 'View Profile'
+    },
+    {
+      id: 4, name: 'David Wilson', designation: 'Partner', company: 'Sequoia',
+      tags: [{label: 'Recruiter', type: 'default'}],
+      lastContacted: 'Yesterday', strength: 2, actionText: 'Log Interaction'
     }
+  ];
+
+  const renderDots = (strength) => {
+    return (
+      <div className="strength-dots">
+        {[1, 2, 3, 4, 5].map(i => (
+          <div key={i} className={`dot ${i <= strength ? 'active' : ''}`}></div>
+        ))}
+      </div>
+    );
   };
 
   return (
     <div className="app-container">
       <Sidebar />
       <main className="main-content">
-        <Header />
-        <div className="page-header">
-          <div>
-            <h1>CRM — Contacts & Referrals</h1>
-            <p>Manage your professional network and referrals</p>
+        <Header contextualAction={
+          <div className="header-status">
+            Status: <span style={{color: 'var(--text-primary)', marginLeft: 4}}>Active Job Hunt</span>
           </div>
-          <button className="btn-primary" onClick={() => setShowModal(true)}>
-            <Plus size={16} /> Add Contact
-          </button>
+        } />
+        <div className="crm-container">
+          <div className="crm-header">
+            <div>
+              <h1>Networking Hub</h1>
+              <p>Manage your professional ecosystem and nurture high-value relationships.</p>
+            </div>
+            <div className="header-actions-right">
+              <button className="context-btn"><span className="material-symbols-outlined">filter_list</span> Filters</button>
+              <button className="btn-primary" onClick={() => setShowModal(true)}>
+                <span className="material-symbols-outlined">person_add</span> Add New Contact
+              </button>
+            </div>
+          </div>
+
+          <div className="crm-stats-grid">
+            <div className="crm-stat-card">
+              <p className="stat-label">Total Network</p>
+              <div className="stat-value-group">
+                <h3>124</h3>
+                <span className="stat-change">+5 this week</span>
+              </div>
+            </div>
+            <div className="crm-stat-card">
+              <p className="stat-label">High-impact Leads</p>
+              <div className="stat-value-group">
+                <h3>18</h3>
+                <span className="stat-desc">recruiters/referrals</span>
+              </div>
+            </div>
+            <div className="crm-stat-card">
+              <p className="stat-label">Avg. Contact Interval</p>
+              <div className="stat-value-group">
+                <h3>12</h3>
+                <span className="stat-desc">Days</span>
+              </div>
+            </div>
+            <div className="crm-stat-card border-warning">
+              <p className="stat-label">Follow-ups Due</p>
+              <div className="stat-value-group">
+                <h3 className="text-warning">7</h3>
+                <span className="stat-desc text-warning">Action Required</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="contacts-grid">
+            {displayData.map(contact => (
+              <div key={contact.id} className="contact-card">
+                <div className="contact-card-header">
+                  <div className="contact-avatar">
+                    <img src={`https://ui-avatars.com/api/?name=${contact.name}&background=random&color=fff`} alt={contact.name} />
+                  </div>
+                  <div className="contact-info">
+                    <h4>{contact.name}</h4>
+                    <p>{contact.designation} @ {contact.company}</p>
+                  </div>
+                </div>
+                
+                <div className="contact-tags">
+                  {contact.tags?.map((tag, idx) => (
+                    <span key={idx} className={`tag tag-${tag.type}`}>{tag.label}</span>
+                  ))}
+                </div>
+                
+                <div className="contact-meta">
+                  <div className="meta-col">
+                    <span className="meta-label">Last Contacted</span>
+                    <span className="meta-val">{contact.lastContacted || 'Never'}</span>
+                  </div>
+                  <div className="meta-col">
+                    <span className="meta-label">Relationship Strength</span>
+                    {renderDots(contact.strength || 1)}
+                  </div>
+                </div>
+                
+                <button className={`contact-action-btn ${contact.actionText === 'Send Message' ? 'btn-teal' : 'btn-outline'}`}>
+                  {contact.actionText || 'Log Interaction'}
+                </button>
+              </div>
+            ))}
+
+            <div className="add-contact-card" onClick={() => setShowModal(true)}>
+              <div className="add-contact-icon">
+                <span className="material-symbols-outlined">add</span>
+              </div>
+              <h4>Add New Contact</h4>
+              <p>Expand your network</p>
+            </div>
+          </div>
         </div>
-
-        {loading ? (
-          <div className="page-loading">Loading…</div>
-        ) : (
-          <div className="crm-grid">
-            {/* Contacts */}
-            <div className="card">
-              <h3 className="section-title">Contacts ({contacts.length})</h3>
-              {contacts.length === 0 ? (
-                <div className="page-empty" style={{ padding: '30px 0' }}>
-                  <Users size={30} opacity={0.3} />
-                  <p>No contacts yet. Add your first one!</p>
-                </div>
-              ) : contacts.map(contact => (
-                <div key={contact.id} className="contact-card">
-                  <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', flex: 1 }}>
-                    <div className="contact-avatar">
-                      {(contact.name?.[0] ?? '?').toUpperCase()}
-                    </div>
-                    <div className="contact-info">
-                      <h4>{contact.name}</h4>
-                      {contact.designation && <p>{contact.designation}{contact.company ? ` @ ${contact.company}` : ''}</p>}
-                      {contact.email && <p><a href={`mailto:${contact.email}`}>{contact.email}</a></p>}
-                      {contact.linkedin_url && (
-                        <p><a href={contact.linkedin_url} target="_blank" rel="noreferrer">LinkedIn</a></p>
-                      )}
-                    </div>
-                  </div>
-                  <button className="delete-btn" onClick={() => handleDeleteContact(contact.id)} title="Delete">
-                    <Trash2 size={14} />
-                  </button>
-                </div>
-              ))}
-            </div>
-
-            {/* Referrals */}
-            <div className="card">
-              <h3 className="section-title">Referrals ({referrals.length})</h3>
-              {referrals.length === 0 ? (
-                <div className="page-empty" style={{ padding: '30px 0' }}>
-                  <p>No referrals yet.</p>
-                </div>
-              ) : referrals.map(referral => (
-                <div key={referral.id} className="referral-row">
-                  <div>
-                    <strong>{referral.contact_name ?? '—'}</strong>
-                    <span style={{ color: 'var(--text-secondary)', marginLeft: 8 }}>
-                      for {referral.opportunity_role ?? '—'} @ {referral.company ?? '—'}
-                    </span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <span className="referral-status">{referral.status}</span>
-                    <button className="delete-btn" onClick={() => handleDeleteReferral(referral.id)} title="Delete">
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </main>
 
+      {/* Moved AddContactModal into a separate file conceptually, or inline here */}
       <AddContactModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}

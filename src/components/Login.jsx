@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Login.css';
-import { Briefcase, AlertCircle } from 'lucide-react';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -35,15 +34,15 @@ export default function Login() {
       <div className="login-box">
         <div className="login-header">
           <div className="login-logo">
-            <Briefcase size={32} color="#3B82F6" />
+            <span className="material-symbols-outlined logo-icon">architecture</span>
           </div>
-          <h2>CareerFlow</h2>
-          <p>Welcome back! Please login to your account.</p>
+          <h2>CareerArch</h2>
+          <p>Sign in to manage your professional journey</p>
         </div>
 
         {sessionExpired && (
           <div className="login-banner login-banner--warning">
-            <AlertCircle size={16} />
+            <span className="material-symbols-outlined">error</span>
             <span>Your session expired. Please log in again.</span>
           </div>
         )}
@@ -52,30 +51,71 @@ export default function Login() {
 
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
-            <label>Email</label>
-            <input
-              type="email"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter your email"
-              required
-            />
+            <label>EMAIL ADDRESS</label>
+            <div className="input-wrapper">
+              <span className="material-symbols-outlined input-icon">mail</span>
+              <input
+                type="email"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="name@company.com"
+                required
+              />
+            </div>
           </div>
+          
           <div className="form-group">
-            <label>Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              required
-            />
+            <div className="password-header">
+              <label>PASSWORD</label>
+              <a href="#" className="forgot-password">Forgot password?</a>
+            </div>
+            <div className="input-wrapper">
+              <span className="material-symbols-outlined input-icon">lock</span>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+              />
+              <span className="material-symbols-outlined input-icon-right">visibility</span>
+            </div>
           </div>
-          <button type="submit" className="login-button">Sign In</button>
+
+          <div className="remember-me">
+            <input type="checkbox" id="remember" />
+            <label htmlFor="remember">Remember me for 30 days</label>
+          </div>
+
+          <button type="submit" className="login-button">
+            Sign In 
+            <span className="material-symbols-outlined">arrow_forward</span>
+          </button>
         </form>
-        <div className="login-footer" style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-          <p>Don&apos;t have an account? <Link to="/register" style={{ color: 'var(--primary-blue)', textDecoration: 'none', fontWeight: '500' }}>Sign Up here</Link></p>
+
+        <div className="divider">
+          <span>OR CONTINUE WITH</span>
         </div>
+
+        <div className="social-login">
+          <button className="social-btn">
+            <img src="https://www.google.com/favicon.ico" alt="Google" className="social-icon" />
+            Google
+          </button>
+          <button className="social-btn">
+            <img src="https://www.linkedin.com/favicon.ico" alt="LinkedIn" className="social-icon" />
+            LinkedIn
+          </button>
+        </div>
+
+        <div className="login-footer">
+          <p>Don't have an account? <Link to="/register" className="signup-link">Sign up</Link></p>
+        </div>
+      </div>
+      
+      <div className="secure-badge">
+        <span className="material-symbols-outlined">verified_user</span>
+        Secure Enterprise-Grade Encryption
       </div>
     </div>
   );

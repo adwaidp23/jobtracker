@@ -1,36 +1,27 @@
-import { useState } from 'react';
-import { Search, Plus } from 'lucide-react';
-import AddOpportunityModal from './AddOpportunityModal';
 import './Header.css';
 
-export default function Header() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
+export default function Header({ contextualAction }) {
   return (
-    <>
-      <header className="top-header">
-        <div className="search-bar">
-          <Search size={20} className="search-icon" />
-          <input type="text" placeholder="Search applications, contacts, or jobs..." />
-        </div>
+    <header className="top-header">
+      <div className="search-bar">
+        <span className="material-symbols-outlined search-icon">search</span>
+        <input type="text" placeholder="Search applications, companies, or tasks..." />
+      </div>
+      
+      <div className="header-actions">
+        <button className="icon-btn" title="Notifications">
+          <span className="material-symbols-outlined">notifications</span>
+        </button>
+        <button className="icon-btn" title="Help">
+          <span className="material-symbols-outlined">help</span>
+        </button>
         
-        <div className="header-actions">
-          <button className="add-btn" onClick={() => setIsModalOpen(true)}>
-            <Plus size={20} />
-            <span>Add Application</span>
-          </button>
-          
-          <div className="profile-btn">
-            <img src="https://ui-avatars.com/api/?name=User&background=3B82F6&color=fff" alt="Profile" />
+        {contextualAction && (
+          <div className="contextual-action">
+            {contextualAction}
           </div>
-        </div>
-      </header>
-
-      <AddOpportunityModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        onSuccess={() => window.location.reload()} 
-      />
-    </>
+        )}
+      </div>
+    </header>
   );
 }

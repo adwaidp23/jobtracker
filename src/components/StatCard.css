@@ -2,65 +2,76 @@
   background: var(--bg-secondary);
   border-radius: var(--radius-lg);
   padding: 24px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-card);
   border: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.stat-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  gap: 16px;
 }
 
 .stat-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 24px;
-}
-
-.stat-icon-wrapper {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.stat-change {
-  font-size: 12px;
-  font-weight: 600;
-  padding: 4px 8px;
-  border-radius: 12px;
-}
-
-.stat-change.positive {
-  background-color: var(--success-bg);
-  color: var(--success-green);
-}
-
-.stat-change.negative {
-  background-color: var(--danger-bg);
-  color: var(--danger-red);
-}
-
-.stat-change.neutral {
-  background-color: #F1F5F9;
-  color: #64748B;
 }
 
 .stat-title {
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 13px;
   color: var(--text-secondary);
-  margin-bottom: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.stat-content {
+  display: flex;
+  align-items: baseline;
 }
 
 .stat-value {
   font-size: 32px;
   font-weight: 700;
   color: var(--text-primary);
+  line-height: 1;
+  margin: 0;
+}
+
+.stat-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.stat-badge .badge-icon {
+  font-size: 14px;
+}
+
+.stat-badge--positive {
+  background-color: var(--success-bg);
+  color: var(--success-green);
+}
+
+.stat-badge--default {
+  background-color: var(--bg-active);
+  color: var(--primary-blue);
+}
+
+.stat-badge--warning {
+  background-color: var(--warning-bg);
+  color: var(--warning-orange);
+}
+
+.stat-badge--danger {
+  background-color: var(--danger-bg);
+  color: var(--danger-red);
+}
+
+.stat-badge--muted {
+  background-color: var(--bg-active);
+  color: var(--text-secondary);
 }

@@ -1,138 +1,210 @@
-.applications-page {
-  padding: 0;
+.pipeline-container {
+  padding: 32px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.pipeline-header {
   margin-bottom: 24px;
 }
 
-.page-header h1 {
-  font-size: 22px;
+.pipeline-header h1 {
+  font-size: 24px;
   font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
 }
 
-.page-header p {
+.pipeline-header p {
   color: var(--text-secondary);
-  font-size: 13px;
-  margin-top: 2px;
+  font-size: 14px;
 }
 
-.btn-primary {
+.kanban-board {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding-bottom: 16px;
+}
+
+.kanban-column {
+  flex: 1;
+  min-width: 300px;
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+}
+
+.kanban-column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.kanban-column-header h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
   display: flex;
   align-items: center;
   gap: 8px;
-  background: var(--primary-blue);
-  color: white;
-  padding: 10px 18px;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 14px;
-  transition: opacity 0.2s;
 }
 
-.btn-primary:hover { opacity: 0.9; }
-
-.status-badge {
-  display: inline-block;
-  padding: 3px 10px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.app-table-wrapper {
-  overflow-x: auto;
-}
-
-.app-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.app-table th {
-  text-align: left;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.app-table td {
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--border-color);
-  vertical-align: middle;
-}
-
-.app-table tbody tr {
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.app-table tbody tr:hover {
-  background: var(--bg-primary);
-}
-
-.app-table .company-name {
-  font-weight: 600;
+.kanban-count {
+  background-color: var(--bg-active);
   color: var(--text-primary);
-  font-size: 14px;
-}
-
-.app-table .role-name {
-  color: var(--text-secondary);
   font-size: 12px;
-  margin-top: 2px;
+  padding: 2px 6px;
+  border-radius: 4px;
 }
 
-.delete-btn {
+.icon-btn-small {
+  color: var(--text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-  color: var(--danger-red);
-  transition: background 0.2s;
 }
 
-.delete-btn:hover {
-  background: var(--danger-bg);
+.icon-btn-small:hover {
+  color: var(--text-primary);
 }
 
-.page-empty {
+.kanban-cards {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 60px 24px;
-  color: var(--text-secondary);
-  text-align: center;
+  gap: 16px;
+  margin-bottom: 16px;
 }
 
-.page-empty h3 {
-  font-size: 16px;
+.kanban-card {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.kanban-card:hover {
+  border-color: var(--primary-blue-light);
+  box-shadow: var(--shadow-md);
+}
+
+.card-top {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  min-height: 20px;
+}
+
+.tag {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.tag-remote {
+  background-color: var(--bg-active);
+  color: var(--primary-blue);
+}
+
+.tag-priority {
+  background-color: var(--danger-bg);
+  color: var(--danger-red);
+}
+
+.card-role {
+  font-size: 15px;
+  font-weight: 700;
   color: var(--text-primary);
+  margin-bottom: 4px;
 }
 
-.page-loading {
+.card-company {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border-color);
+  padding-top: 12px;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.card-meta .material-symbols-outlined {
+  font-size: 14px;
+}
+
+.meta-highlight {
+  color: var(--primary-blue);
+  background: var(--bg-active);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.company-avatar {
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+}
+
+.kanban-add-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 60px;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  background-color: transparent;
+  border: 1px dashed var(--text-secondary);
   color: var(--text-secondary);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
 }
 
-.page-error {
-  padding: 20px;
-  background: var(--danger-bg);
-  color: var(--danger-red);
-  border-radius: 10px;
-  font-size: 14px;
+.kanban-add-btn:hover {
+  background-color: var(--bg-active);
+  color: var(--text-primary);
+  border-color: var(--text-primary);
+}
+
+.context-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.context-btn:hover {
+  background-color: var(--bg-active);
+}
+
+.context-btn .material-symbols-outlined {
+  font-size: 18px;
 }

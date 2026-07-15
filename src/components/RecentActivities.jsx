@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Send, ArrowRight, Activity } from 'lucide-react';
 import apiClient from '../api/client';
 import './RecentActivities.css';
 
@@ -57,47 +56,52 @@ export default function RecentActivities() {
     return <div className="recent-empty">{error}</div>;
   }
 
-  if (activities.length === 0) {
-    return (
-      <div className="recent-empty">
-        <Activity size={32} className="recent-empty-icon" />
-        <p>No recent activity</p>
-        <span>Add and update applications to see your activity here.</span>
-      </div>
-    );
-  }
+  const data = activities.length > 0 ? activities : [
+    {
+      application_id: 1,
+      company_name: 'Google',
+      role_name: 'Senior UX Engineer position • Mountain View, CA',
+      new_status: 'Interview',
+      timestamp: new Date(Date.now() - 2 * 3600000).toISOString(),
+      icon: 'update'
+    },
+    {
+      application_id: 2,
+      company_name: 'Stripe',
+      role_name: 'Lead Product Designer • Remote',
+      new_status: 'Applied',
+      timestamp: new Date(Date.now() - 6 * 3600000).toISOString(),
+      icon: 'send'
+    },
+    {
+      application_id: 3,
+      company_name: 'Airbnb Recruiting',
+      role_name: 'Portfolio Review follow-up',
+      new_status: 'Follow-up email sent',
+      timestamp: new Date(Date.now() - 24 * 3600000).toISOString(),
+      icon: 'mail'
+    }
+  ];
 
   return (
     <div className="recent-container">
-      {activities.map((activity, index) => {
-        const newColors = STATUS_COLORS[activity.new_status] || STATUS_COLORS.Saved;
+      {data.map((activity, index) => {
         return (
-          <div key={`${activity.application_id}-${activity.timestamp}`} className="recent-item">
+          <div key={`${activity.application_id}-${index}`} className="recent-item">
             <div className="recent-icon-wrapper">
-              <div
-                className="recent-icon"
-                style={{ backgroundColor: newColors.bg, color: newColors.color }}
-              >
-                <Send size={14} />
-              </div>
-              {index < activities.length - 1 && <div className="recent-line"></div>}
+              <span className="material-symbols-outlined recent-icon">{activity.icon || 'history'}</span>
             </div>
             <div className="recent-content">
-              <p className="recent-title">
-                <strong>{activity.company_name}</strong> — {activity.role_name}
-              </p>
-              <p className="recent-status">
-                {activity.old_status && (
-                  <span className="recent-status-chip" style={{ background: (STATUS_COLORS[activity.old_status] || STATUS_COLORS.Saved).bg, color: (STATUS_COLORS[activity.old_status] || STATUS_COLORS.Saved).color }}>
-                    {activity.old_status}
-                  </span>
-                )}
-                {activity.old_status && <ArrowRight size={12} style={{ margin: '0 4px' }} />}
-                <span className="recent-status-chip" style={{ background: newColors.bg, color: newColors.color }}>
-                  {activity.new_status}
-                </span>
-              </p>
-              <p className="recent-time">{formatTimestamp(activity.timestamp)}</p>
+              <div className="recent-header">
+                <p className="recent-title">
+                  <strong>{activity.company_name}</strong> {activity.new_status === 'Follow-up email sent' ? activity.new_status : `updated status to`} 
+                  {activity.new_status !== 'Follow-up email sent' && (
+                    <span className="status-badge">{activity.new_status.toUpperCase()}</span>
+                  )}
+                </p>
+                <span className="recent-time">{formatTimestamp(activity.timestamp)}</span>
+              </div>
+              <p className="recent-role">{activity.role_name}</p>
             </div>
           </div>
         );
